@@ -1,0 +1,1170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rowing Predictor — On-Water 2k & Recruiting Benchmarks for Junior & Collegiate Rowers</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400&family=Manrope:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0e1116;
+    --bg-elevated: #161a21;
+    --bg-input: #1c2129;
+    --border: #2a313d;
+    --border-soft: #21262f;
+    --text: #e8e6e1;
+    --text-dim: #8b8f97;
+    --text-faint: #5a5e66;
+    --accent: #c8a96a;
+    --accent-glow: rgba(200, 169, 106, 0.15);
+    --positive: #d4685c;
+    --negative: #7ba185;
+    --neutral: #8b8f97;
+    --serif: 'Fraunces', Georgia, serif;
+    --sans: 'Manrope', -apple-system, sans-serif;
+    --mono: 'JetBrains Mono', 'SF Mono', monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      radial-gradient(ellipse at top, rgba(200, 169, 106, 0.04), transparent 50%),
+      radial-gradient(ellipse at bottom, rgba(123, 161, 133, 0.03), transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 60px 40px 80px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* HEADER */
+  .header {
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 32px;
+    margin-bottom: 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 40px;
+    animation: fadeUp 0.8s ease-out;
+  }
+  .header-main h1 {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(36px, 5vw, 56px);
+    letter-spacing: -0.02em;
+    line-height: 1;
+    margin-bottom: 12px;
+  }
+  .header-main h1 em { font-style: italic; color: var(--accent); }
+  .header-meta {
+    font-family: var(--mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--text-faint);
+  }
+  .header-meta span { color: var(--accent); }
+  .header-tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    text-align: right;
+    line-height: 1.8;
+    white-space: nowrap;
+  }
+  .header-tag b { color: var(--text-dim); font-weight: 500; }
+
+  .intro {
+    max-width: 720px;
+    margin-bottom: 48px;
+    font-family: var(--serif);
+    font-size: 18px;
+    line-height: 1.55;
+    color: var(--text-dim);
+    animation: fadeUp 0.8s ease-out 0.05s both;
+  }
+  .intro strong { color: var(--text); font-weight: 500; }
+
+  /* LAYOUT */
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1.1fr;
+    gap: 48px;
+    align-items: start;
+  }
+  @media (max-width: 880px) {
+    .grid { grid-template-columns: 1fr; gap: 32px; }
+    .header { flex-direction: column; align-items: flex-start; gap: 16px; }
+    .header-tag { text-align: left; }
+    .container { padding: 40px 24px 60px; }
+    .intro { font-size: 16px; }
+  }
+
+  /* FORM */
+  .panel {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 32px;
+    animation: fadeUp 0.8s ease-out 0.1s both;
+    position: sticky;
+    top: 32px;
+  }
+  @media (max-width: 880px) { .panel { position: static; } }
+  .panel-heading {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .panel-heading::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  .section { margin-bottom: 28px; }
+  .section:last-child { margin-bottom: 0; }
+  .section-label {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 14px;
+    color: var(--text-dim);
+    margin-bottom: 14px;
+  }
+  .field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .field-row:last-child { margin-bottom: 0; }
+  .field-row.single { grid-template-columns: 1fr; }
+  .field-row.triple { grid-template-columns: 1fr 1fr 1fr; }
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+  }
+  .field input, .field select {
+    background: var(--bg-input);
+    border: 1px solid var(--border-soft);
+    color: var(--text);
+    padding: 11px 13px;
+    font-family: var(--mono);
+    font-size: 13px;
+    border-radius: 2px;
+    transition: border-color 0.15s ease, background 0.15s ease;
+    width: 100%;
+  }
+  .field input:focus, .field select:focus {
+    outline: none;
+    border-color: var(--accent);
+    background: #1f242d;
+  }
+  .field input::placeholder { color: var(--text-faint); }
+  .field select { cursor: pointer; appearance: none; background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3e%3cpath fill='none' stroke='%238b8f97' stroke-width='1.5' d='M1 1l5 5 5-5'/%3e%3c/svg%3e"); background-repeat: no-repeat; background-position: right 10px center; padding-right: 28px; text-overflow: ellipsis; }
+  @media (max-width: 540px) {
+    .field-row.triple, .field-row { grid-template-columns: 1fr; }
+  }
+  .btn {
+    width: 100%;
+    margin-top: 8px;
+    background: var(--accent);
+    color: var(--bg);
+    border: none;
+    padding: 14px 20px;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+  }
+  .btn:hover {
+    background: #d4b576;
+    transform: translateY(-1px);
+    box-shadow: 0 8px 24px var(--accent-glow);
+  }
+  .btn:active { transform: translateY(0); }
+
+  /* RESULTS */
+  .results { animation: fadeUp 0.8s ease-out 0.2s both; display: flex; flex-direction: column; gap: 24px; }
+
+  .hero {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 36px 32px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  }
+  .hero-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    margin-bottom: 8px;
+  }
+  .hero-time {
+    font-family: var(--serif);
+    font-size: clamp(56px, 9vw, 88px);
+    font-weight: 300;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    color: var(--text);
+  }
+  .hero-time em { font-style: italic; color: var(--accent); }
+  .hero-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .hero-meta-item { display: flex; flex-direction: column; gap: 4px; }
+  .hero-meta-item .label {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+  }
+  .hero-meta-item .value {
+    font-family: var(--serif);
+    font-size: 22px;
+    color: var(--text);
+  }
+  .hero-meta-item .value.tier { color: var(--accent); font-style: italic; }
+
+  /* SHARED CARD */
+  .card {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 28px 32px;
+  }
+  .card-title {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .card-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  .card-narrative {
+    font-family: var(--serif);
+    font-size: 15px;
+    color: var(--text);
+    line-height: 1.6;
+    margin-bottom: 18px;
+  }
+  .card-narrative em { color: var(--accent); font-style: italic; }
+  .card-narrative strong { color: var(--text); font-weight: 500; }
+
+  /* BENCHMARK ROWS */
+  .bench-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border-soft);
+    align-items: baseline;
+  }
+  .bench-row:last-child { border-bottom: none; }
+  .bench-row .label {
+    font-family: var(--sans);
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.4;
+  }
+  .bench-row .label .name { font-weight: 500; }
+  .bench-row .label .examples {
+    display: block;
+    font-family: var(--sans);
+    font-size: 11px;
+    color: var(--text-faint);
+    margin-top: 2px;
+  }
+  .bench-row .label .range {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-faint);
+    letter-spacing: 0.06em;
+    margin-top: 2px;
+    display: inline-block;
+  }
+  .bench-row .gap {
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 500;
+    text-align: right;
+    white-space: nowrap;
+  }
+  .gap.met { color: var(--negative); }
+  .gap.close { color: var(--accent); }
+  .gap.far { color: var(--positive); }
+  .gap.distant { color: var(--text-faint); }
+
+  /* TRAJECTORY */
+  .traj-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 8px;
+  }
+  @media (max-width: 540px) { .traj-grid { grid-template-columns: 1fr; } }
+  .traj-cell {
+    padding: 14px 16px;
+    background: var(--bg-input);
+    border-left: 2px solid var(--accent);
+    border-radius: 2px;
+  }
+  .traj-cell .traj-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--text-faint);
+    margin-bottom: 6px;
+  }
+  .traj-cell .traj-value {
+    font-family: var(--serif);
+    font-size: 18px;
+    color: var(--text);
+    margin-bottom: 4px;
+    line-height: 1.3;
+  }
+  .traj-cell .traj-value em { color: var(--accent); font-style: italic; }
+  .traj-cell .traj-detail {
+    font-family: var(--sans);
+    font-size: 12px;
+    color: var(--text-dim);
+    line-height: 1.5;
+  }
+
+  /* TRAINING ADVICE */
+  .advice-item {
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .advice-item:last-child { border-bottom: none; }
+  .advice-item .priority {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 6px;
+  }
+  .advice-item .focus {
+    font-family: var(--serif);
+    font-size: 16px;
+    color: var(--text);
+    font-style: italic;
+    margin-bottom: 4px;
+  }
+  .advice-item .detail {
+    font-family: var(--sans);
+    font-size: 13px;
+    color: var(--text-dim);
+    line-height: 1.55;
+  }
+
+  /* BREAKDOWN */
+  .row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 16px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border-soft);
+    align-items: baseline;
+    font-size: 14px;
+  }
+  .row:last-of-type { border-bottom: none; }
+  .row .factor { color: var(--text-dim); }
+  .row .factor small {
+    color: var(--text-faint);
+    font-size: 11px;
+    margin-left: 6px;
+    font-family: var(--mono);
+  }
+  .row .delta {
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 500;
+    text-align: right;
+    min-width: 64px;
+  }
+  .delta.positive { color: var(--positive); }
+  .delta.negative { color: var(--negative); }
+  .delta.neutral { color: var(--text-faint); }
+  .row.total {
+    margin-top: 8px;
+    padding-top: 14px;
+    border-top: 1px solid var(--border);
+    border-bottom: none;
+  }
+  .row.total .factor {
+    color: var(--text);
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 15px;
+  }
+  .row.total .delta { color: var(--text); font-weight: 600; font-size: 14px; }
+
+  /* SOURCES */
+  .sources {
+    margin-top: 64px;
+    padding-top: 40px;
+    border-top: 1px solid var(--border);
+  }
+  .sources h2 {
+    font-family: var(--serif);
+    font-size: 28px;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    margin-bottom: 12px;
+  }
+  .sources h2 em { font-style: italic; color: var(--accent); }
+  .sources-intro {
+    font-family: var(--sans);
+    font-size: 14px;
+    color: var(--text-dim);
+    margin-bottom: 24px;
+    max-width: 720px;
+    line-height: 1.6;
+  }
+  .source-list {
+    list-style: none;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px 32px;
+  }
+  @media (max-width: 720px) { .source-list { grid-template-columns: 1fr; } }
+  .source-list li {
+    font-family: var(--sans);
+    font-size: 13px;
+    color: var(--text-dim);
+    line-height: 1.55;
+    padding-left: 16px;
+    position: relative;
+  }
+  .source-list li::before {
+    content: '·';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+    font-weight: 700;
+  }
+  .source-list li b { color: var(--text); font-weight: 500; }
+
+  /* DISCLAIMER */
+  .disclaimer {
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 13px;
+    color: var(--text-faint);
+    line-height: 1.7;
+    max-width: 720px;
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .reveal { animation: fadeUp 0.5s ease-out; }
+
+  .alert {
+    margin-top: 10px;
+    padding: 10px 12px;
+    background: rgba(212, 104, 92, 0.08);
+    border-left: 2px solid var(--positive);
+    color: #e89992;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    display: none;
+  }
+  .alert.show { display: block; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header class="header">
+    <div class="header-main">
+      <h1>From the erg, <em>to the line.</em></h1>
+      <div class="header-meta">
+        On-Water 2k Predictor &nbsp;·&nbsp; <span>For Junior &amp; Collegiate Rowers</span>
+      </div>
+    </div>
+    <div class="header-tag">
+      <b>Model</b> v2.0<br>
+      <b>Distance</b> 2,000 metres
+    </div>
+  </header>
+
+  <p class="intro">
+    Your 2k erg score is one number. Your on-water 2k is another. Recruiting standards at <strong>Yale</strong>,
+    <strong>Harvard</strong>, <strong>Washington</strong>, and <strong>USRowing</strong> are a third. This tool translates between all of them &mdash; so you can
+    set realistic race-day expectations, see exactly where you stack against named programs, and understand what
+    your number means at <strong>your age</strong>.
+  </p>
+
+  <div class="grid">
+
+    <!-- LEFT: FORM -->
+    <form class="panel" id="predictor-form">
+      <div class="panel-heading">Inputs</div>
+
+      <div class="section">
+        <div class="section-label">The athlete</div>
+        <div class="field-row triple">
+          <div class="field">
+            <label for="sex">Sex</label>
+            <select id="sex">
+              <option value="M">Male</option>
+              <option value="F">Female</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="age">Age</label>
+            <input type="number" id="age" value="17" min="13" max="25">
+          </div>
+          <div class="field">
+            <label for="weight">Weight (kg)</label>
+            <input type="number" id="weight" value="80" min="40" max="150" step="0.5">
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="height">Height (cm)</label>
+            <input type="number" id="height" value="183" min="140" max="220" step="0.5">
+          </div>
+          <div class="field">
+            <label for="experience">Experience</label>
+            <select id="experience">
+              <option>Novice</option>
+              <option selected>Intermediate</option>
+              <option>Advanced</option>
+              <option>Elite</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-label">The erg test</div>
+        <div class="field-row">
+          <div class="field">
+            <label for="split">500m split (m:ss.s)</label>
+            <input type="text" id="split" value="1:42.0" placeholder="1:42.0">
+          </div>
+          <div class="field">
+            <label for="rate">Stroke rate (spm)</label>
+            <input type="number" id="rate" value="32" min="16" max="50">
+          </div>
+        </div>
+        <div class="alert" id="split-alert">Split format invalid. Use minutes:seconds (e.g. 1:45.0)</div>
+      </div>
+
+      <div class="section">
+        <div class="section-label">The race context</div>
+        <div class="field-row single">
+          <div class="field">
+            <label for="boat">Boat class</label>
+            <select id="boat">
+              <option value="1x">1x &middot; Single Scull</option>
+              <option value="2-">2- &middot; Coxless Pair</option>
+              <option value="2x">2x &middot; Double Scull</option>
+              <option value="4-">4- &middot; Coxless Four</option>
+              <option value="4+">4+ &middot; Coxed Four</option>
+              <option value="4x">4x &middot; Quad Scull</option>
+              <option value="8+" selected>8+ &middot; Eight</option>
+            </select>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="water">Water conditions</label>
+            <select id="water">
+              <option selected>Flat</option>
+              <option>Choppy</option>
+              <option>Rough</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="weightclass">Recruiting class</label>
+            <select id="weightclass">
+              <option value="auto" selected>Auto (by weight)</option>
+              <option value="HW">Heavyweight</option>
+              <option value="LW">Lightweight</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <button type="submit" class="btn">Run Prediction</button>
+    </form>
+
+    <!-- RIGHT: RESULTS -->
+    <div class="results" id="results"></div>
+
+  </div>
+
+  <!-- SOURCES -->
+  <section class="sources">
+    <h2>Where the <em>numbers come from.</em></h2>
+    <p class="sources-intro">
+      Recruiting standards are aggregated from publicly stated guidelines by collegiate programs, recruiting
+      services, and USRowing selection documents. Programs publish ranges, not hard cutoffs &mdash; what's
+      shown here is the consensus across reputable sources.
+    </p>
+    <ul class="source-list">
+      <li><b>Sparks Consulting</b> &mdash; collegiate rowing recruiting standards by program tier, published 2024-2026.</li>
+      <li><b>NCSA Sports</b> &mdash; men's college rowing recruiting time guides, current cycle.</li>
+      <li><b>USRowing</b> &mdash; U19 Selection &amp; Development Camp criteria, U23 selection guidelines, National Team Testing protocols.</li>
+      <li><b>Crimson Education Athletics</b> &mdash; published D1 rowing recruitment standards by weight class.</li>
+      <li><b>Harvard Lightweight Rowing</b> &mdash; publicly stated recruiting thresholds (sub-6:30 2k, sub-21:00 6k).</li>
+      <li><b>Concept2</b> &mdash; published age-group standards and the Logbook ranking database.</li>
+      <li><b>Erg-to-water adjustments</b> &mdash; coaching heuristics referencing Dr. Valery Kleshnev's BioRow biomechanics research.</li>
+    </ul>
+  </section>
+
+  <div class="disclaimer">
+    Recruiting benchmarks are directional ranges, not guarantees. Programs evaluate trajectory, race results,
+    height, weight, technique, academics, and character alongside erg scores. Standards shift year to year as
+    the sport evolves &mdash; treat the numbers here as a starting reference, then verify against your target
+    program's published criteria. On-water predictions are heuristic estimates that don't account for technique,
+    crew compatibility, rigging, or weather.
+  </div>
+
+</div>
+
+<script>
+// ============================================================================
+// PREDICTION LOGIC
+// ============================================================================
+const BOAT_ADJUSTMENTS = {
+  '1x': 20, '2-': 12, '2x': 5, '4-': 0, '4+': 3, '4x': -8, '8+': -15
+};
+const EXPERIENCE_ADJUSTMENTS = {
+  'Novice': 25, 'Intermediate': 10, 'Advanced': 3, 'Elite': 0
+};
+const WATER_ADJUSTMENTS = { 'Flat': 0, 'Choppy': 8, 'Rough': 18 };
+const REFERENCE = {
+  'M': { height: 185, weight: 80 },
+  'F': { height: 172, weight: 65 }
+};
+
+// Lightweight cutoffs (race-day weight)
+const LW_CUTOFF = { 'M': 72.5, 'F': 59 };
+
+// ============================================================================
+// REAL RECRUITING BENCHMARKS
+// Aggregated from Sparks, NCSA, Crimson Education, Harvard Lightweight published
+// criteria, and USRowing U19 selection documents. Times are 2k erg in seconds.
+// ============================================================================
+const BENCHMARKS = {
+  'M_HW': [
+    { name: 'USRowing U19 National Team',  examples: 'Top juniors selected for World Championships',           rangeLow: 6*60+5,  rangeHigh: 6*60+15, target: 6*60+10 },
+    { name: 'Top D1 / Ivy League',         examples: 'Yale, Harvard, Princeton, Washington, Cal, Brown',       rangeLow: 6*60+10, rangeHigh: 6*60+20, target: 6*60+15 },
+    { name: 'Strong D1 Varsity',           examples: 'Wisconsin, Navy, Syracuse, Penn, Notre Dame, Michigan',  rangeLow: 6*60+20, rangeHigh: 6*60+30, target: 6*60+25 },
+    { name: 'Mid D1 / Competitive Club',   examples: 'Scholarship aid generally requires 6:40 or faster',      rangeLow: 6*60+30, rangeHigh: 6*60+40, target: 6*60+35 },
+    { name: 'D3 / ACRA Competitive',       examples: 'Williams, Bates, Trinity, top ACRA programs',            rangeLow: 6*60+35, rangeHigh: 6*60+45, target: 6*60+40 },
+    { name: 'Varsity High School',         examples: 'Solid HS varsity 8+ contender',                          rangeLow: 6*60+50, rangeHigh: 7*60+0,  target: 6*60+55 },
+  ],
+  'M_LW': [
+    { name: 'Harvard Lightweight',         examples: 'Published threshold: sub-6:30 2k, sub-21:00 6k',         rangeLow: 6*60+20, rangeHigh: 6*60+30, target: 6*60+25 },
+    { name: 'Top D1 Lightweight',          examples: 'Cornell, Princeton, Yale, Penn (≤72.5 kg / 160 lb)',     rangeLow: 6*60+25, rangeHigh: 6*60+35, target: 6*60+30 },
+    { name: 'D1 Lightweight (developing)', examples: 'Sub-6:40 typical floor for consideration',               rangeLow: 6*60+35, rangeHigh: 6*60+45, target: 6*60+40 },
+    { name: 'Varsity High School LW',      examples: 'Competitive HS lightweight at nationals',                rangeLow: 6*60+50, rangeHigh: 7*60+5,  target: 6*60+55 },
+  ],
+  'F_HW': [
+    { name: 'USRowing U19 National Team',  examples: 'Top juniors selected for World Championships',           rangeLow: 6*60+50, rangeHigh: 7*60+0,  target: 6*60+55 },
+    { name: 'Top D1 / Ivy League',         examples: 'Stanford, Texas, Washington, Princeton, Yale, Cal',      rangeLow: 7*60+0,  rangeHigh: 7*60+10, target: 7*60+5  },
+    { name: 'Strong D1 Varsity',           examples: 'Wisconsin, Virginia, Michigan, Brown, Tennessee',        rangeLow: 7*60+10, rangeHigh: 7*60+20, target: 7*60+15 },
+    { name: 'Mid D1 / Competitive Club',   examples: 'Scholarship floor roughly 7:30 at most D1 programs',     rangeLow: 7*60+20, rangeHigh: 7*60+30, target: 7*60+25 },
+    { name: 'D2 / D3 / ACRA Competitive',  examples: 'Bates, Williams, Wellesley, top ACRA programs',          rangeLow: 7*60+30, rangeHigh: 7*60+45, target: 7*60+35 },
+    { name: 'Varsity High School',         examples: 'Solid HS varsity 8+ contender',                          rangeLow: 7*60+40, rangeHigh: 7*60+55, target: 7*60+45 },
+  ],
+  'F_LW': [
+    { name: 'Top D1 Lightweight',          examples: 'Stanford, Princeton, Wisconsin (≤59 kg / 130 lb)',       rangeLow: 7*60+20, rangeHigh: 7*60+30, target: 7*60+25 },
+    { name: 'D1 Lightweight (developing)', examples: 'Sub-7:40 typical floor for consideration',               rangeLow: 7*60+30, rangeHigh: 7*60+40, target: 7*60+35 },
+    { name: 'Varsity High School LW',      examples: 'Competitive HS lightweight at nationals',                rangeLow: 7*60+45, rangeHigh: 8*60+0,  target: 7*60+50 },
+  ],
+};
+
+// ============================================================================
+// AGE-BASED TRAJECTORY DATA
+// Typical seasonal improvement curves from junior development literature.
+// At younger ages athletes drop more time per year; gains taper through
+// late juniors and stabilise in college.
+// ============================================================================
+// Returns expected seconds of 2k improvement over the next 12 months
+function expectedYearlyImprovement(age, experience) {
+  // Base curve by age
+  let base;
+  if (age <= 14) base = 18;
+  else if (age <= 15) base = 14;
+  else if (age <= 16) base = 10;
+  else if (age <= 17) base = 7;
+  else if (age <= 18) base = 5;
+  else if (age <= 19) base = 4;
+  else if (age <= 21) base = 2.5;
+  else base = 1.5;
+
+  // Adjust for experience: novices have more room to improve, elites less
+  const expMult = { 'Novice': 1.4, 'Intermediate': 1.0, 'Advanced': 0.75, 'Elite': 0.5 };
+  return base * (expMult[experience] || 1);
+}
+
+// Project erg time forward N years
+function projectErg(currentErg, age, experience, years) {
+  let projected = currentErg;
+  let currentAge = age;
+  for (let y = 0; y < years; y++) {
+    projected -= expectedYearlyImprovement(currentAge + y, experience);
+  }
+  return projected;
+}
+
+// ============================================================================
+// CORE PREDICTION
+// ============================================================================
+function parseSplit(str) {
+  const parts = str.trim().split(':');
+  if (parts.length !== 2) throw new Error('bad split');
+  const minutes = parseInt(parts[0], 10);
+  const seconds = parseFloat(parts[1]);
+  if (isNaN(minutes) || isNaN(seconds)) throw new Error('bad split');
+  return minutes * 60 + seconds;
+}
+function formatSplit(s) {
+  const m = Math.floor(s / 60);
+  const sec = s - m * 60;
+  return `${m}:${sec.toFixed(1).padStart(4, '0')}`;
+}
+function formatTimeShort(s) {
+  const m = Math.floor(s / 60);
+  const sec = Math.round(s - m * 60);
+  return `${m}:${String(sec).padStart(2, '0')}`;
+}
+function formatRange(lo, hi) {
+  return `${formatTimeShort(lo)}\u2013${formatTimeShort(hi)}`;
+}
+function calcWeightAdj(w, sex) { return (w - REFERENCE[sex].weight) * 0.15; }
+function calcHeightAdj(h, sex) { return (REFERENCE[sex].height - h) * 0.10; }
+function calcRateAdj(r) {
+  if (r > 36) return (r - 36) * 0.5;
+  if (r < 28) return (28 - r) * 0.5;
+  return 0;
+}
+function determineTier(p, sex) {
+  const t = sex === 'M'
+    ? [[400, 'Elite'], [420, 'National'], [450, 'Regional'], [480, 'Club']]
+    : [[440, 'Elite'], [460, 'National'], [490, 'Regional'], [520, 'Club']];
+  for (const [th, tier] of t) if (p < th) return tier;
+  return 'Developing';
+}
+function predict(i) {
+  const erg2k = i.splitSeconds * 4;
+  const w = calcWeightAdj(i.weight, i.sex);
+  const h = calcHeightAdj(i.height, i.sex);
+  const r = calcRateAdj(i.rate);
+  const b = BOAT_ADJUSTMENTS[i.boat];
+  const e = EXPERIENCE_ADJUSTMENTS[i.experience];
+  const wat = WATER_ADJUSTMENTS[i.water];
+  const total = w + h + r + b + e + wat;
+  const predicted2k = erg2k + total;
+  return {
+    erg2k, weight: w, height: h, rate: r, boat: b, experience: e, water: wat,
+    total, predicted2k, predicted500: predicted2k / 4,
+    tier: determineTier(predicted2k, i.sex)
+  };
+}
+function gapToBenchmark(erg, bTarget) { return erg - bTarget; }
+function classifyGap(gap, range) {
+  if (gap <= 0) return 'met';
+  if (gap <= 5) return 'close';
+  if (gap <= 20) return 'far';
+  return 'distant';
+}
+function formatGap(seconds) {
+  if (Math.abs(seconds) < 0.5) return 'Met';
+  if (seconds < 0) return `${Math.abs(seconds).toFixed(0)}s under`;
+  return `+${seconds.toFixed(0)}s`;
+}
+function pluralSec(n) {
+  return Math.abs(n - 1) < 0.5 ? '1 second' : `${n.toFixed(0)} seconds`;
+}
+
+// ============================================================================
+// RECRUITING NARRATIVE
+// ============================================================================
+function recruitingKey(sex, weight, weightclass) {
+  if (weightclass === 'auto') {
+    return weight <= LW_CUTOFF[sex] ? `${sex}_LW` : `${sex}_HW`;
+  }
+  return `${sex}_${weightclass}`;
+}
+
+function buildRecruitingNarrative(erg, benchmarks, age, isLW) {
+  const unmet = benchmarks.filter(b => erg > b.rangeHigh);
+  const inRange = benchmarks.filter(b => erg >= b.rangeLow && erg <= b.rangeHigh);
+  const exceeded = benchmarks.filter(b => erg < b.rangeLow);
+
+  if (exceeded.length === benchmarks.length) {
+    return `Your erg is <em>faster than every published recruiting standard</em> for this category. That puts you in the conversation with the top tier of college recruits regardless of program.`;
+  }
+
+  // If athlete is currently inside a benchmark range
+  if (inRange.length > 0) {
+    const best = inRange[0]; // benchmarks sorted fastest-to-slowest, so first is highest tier
+    return `Your current erg sits inside the recruiting range for <em>${best.name}</em> (<strong>${formatRange(best.rangeLow, best.rangeHigh)}</strong>). At this level, you're realistically being looked at by programs in that tier.`;
+  }
+
+  // Otherwise, find the closest benchmark above
+  const closest = unmet.reduce((a, b) =>
+    (erg - a.rangeHigh) < (erg - b.rangeHigh) ? a : b
+  );
+  const gap = erg - closest.rangeHigh;
+
+  if (gap <= 5) {
+    return `You're <em>${pluralSec(gap)}</em> away from the <strong>${closest.name}</strong> range. At your level, that's a single training cycle of dedicated work.`;
+  }
+  if (gap <= 15) {
+    return `The next tier ahead is <strong>${closest.name}</strong>, sitting <em>${pluralSec(gap)}</em> off your current erg. Realistic within a season of structured training.`;
+  }
+  return `The closest published standard is <strong>${closest.name}</strong>, <em>${pluralSec(gap)}</em> away. Focus on consistent aerobic base building before chasing tier jumps.`;
+}
+
+// ============================================================================
+// TRAJECTORY
+// ============================================================================
+function buildTrajectoryContent(erg, age, experience, sex, benchmarks) {
+  const oneYear = projectErg(erg, age, experience, 1);
+  const twoYear = projectErg(erg, age, experience, 2);
+  const oneYearImprove = erg - oneYear;
+  const twoYearImprove = erg - twoYear;
+
+  // What tier does the 1-year projection land in?
+  const projectedTier = benchmarks.find(b => oneYear >= b.rangeLow && oneYear <= b.rangeHigh);
+  const oneYearTierLabel = projectedTier
+    ? `Projects into <em>${projectedTier.name}</em> range`
+    : (oneYear < benchmarks[0].rangeLow ? `Projects beyond top tier` : `Below entry tier`);
+
+  const projectedTier2 = benchmarks.find(b => twoYear >= b.rangeLow && twoYear <= b.rangeHigh);
+  const twoYearTierLabel = projectedTier2
+    ? `Projects into <em>${projectedTier2.name}</em> range`
+    : (twoYear < benchmarks[0].rangeLow ? `Projects beyond top tier` : `Below entry tier`);
+
+  // Age-specific narrative
+  let narrative;
+  if (age <= 15) {
+    narrative = `At <strong>${age}</strong>, you're in the steepest improvement window. Rowers this age routinely drop 10&ndash;18 seconds per year with consistent training. The number you pull today says less about your ceiling than what you do in the next 24 months.`;
+  } else if (age <= 17) {
+    narrative = `At <strong>${age}</strong>, you're in the prime junior development window. Expected gains are <em>${pluralSec(oneYearImprove)}</em> over the next year with dedicated training. This is when college coaches start tracking athletes seriously.`;
+  } else if (age <= 19) {
+    narrative = `At <strong>${age}</strong>, improvement curves flatten. Realistic gains are <em>${pluralSec(oneYearImprove)}</em> per year. Your current erg is much closer to your ceiling than a 15-year-old's. Make every training block count.`;
+  } else if (age <= 21) {
+    narrative = `At <strong>${age}</strong>, you're in collegiate-level development. Year-over-year gains average <em>${pluralSec(oneYearImprove)}</em>. Coaches care more about racing IQ, technique under fatigue, and consistency than raw seconds.`;
+  } else {
+    narrative = `At <strong>${age}</strong>, you're past the development curve. Improvement comes from peaking, race execution, and small technical gains rather than year-over-year drops. Your number is your number.`;
+  }
+
+  return {
+    narrative,
+    oneYear, twoYear,
+    oneYearImprove, twoYearImprove,
+    oneYearTierLabel, twoYearTierLabel
+  };
+}
+
+// ============================================================================
+// TRAINING ADVICE
+// ============================================================================
+function buildTrainingAdvice(input, p, benchmarks) {
+  const advice = [];
+
+  // 1. Identify the most-impactful adjustment factor
+  // Look at which adjustment is hurting them most
+  const adjustments = [
+    { label: 'experience', value: p.experience, type: 'experience' },
+    { label: 'weight',     value: p.weight,     type: 'weight' },
+    { label: 'rate',       value: p.rate,       type: 'rate' },
+  ];
+  adjustments.sort((a, b) => b.value - a.value);
+
+  // 2. Erg-first priority almost always wins for juniors
+  const topBenchmark = benchmarks[0];
+  const gapToTop = input.splitSeconds * 4 - topBenchmark.rangeHigh;
+
+  // Priority 1: erg work — it has the biggest multiplier effect
+  advice.push({
+    priority: 'Priority 1',
+    focus: 'Build the engine on the erg.',
+    detail: `Every 1 second off your 2k erg moves your predicted on-water time roughly 4 seconds faster. ${gapToTop > 10 ? `With ${pluralSec(gapToTop)} to close to reach the top tier, this is the single highest-leverage focus.` : `You're close enough to top tier that small erg gains directly cross thresholds.`} Prioritise structured aerobic base work (UT2 sessions, long steady state) over high-intensity intervals if you're not already doing 6&ndash;8 hours a week of low-intensity volume.`
+  });
+
+  // Priority 2: based on weakest adjustment
+  if (p.experience >= 10) {
+    advice.push({
+      priority: 'Priority 2',
+      focus: 'Technical refinement matters more than fitness now.',
+      detail: `Your experience adjustment is adding ${p.experience.toFixed(0)} seconds to your on-water prediction. That's the gap between erg fitness and water speed. Targeted technical work &mdash; catch timing, drive sequencing, finish posture &mdash; closes that gap faster than another erg PB. Ask your coach for specific session-by-session technical priorities.`
+    });
+  } else if (p.weight > 2) {
+    advice.push({
+      priority: 'Priority 2',
+      focus: 'Power-to-weight ratio is working against you on water.',
+      detail: `You're ${(input.weight - REFERENCE[input.sex].weight).toFixed(1)} kg above the reference weight, which adds hull drag. Two paths: trim body composition while maintaining erg watts (slow, sustainable), or significantly outpull the watts-per-kg loss (hard, requires elite engine). For lightweight programs, the weight class cutoff itself becomes the constraint.`
+    });
+  } else if (p.rate > 0) {
+    advice.push({
+      priority: 'Priority 2',
+      focus: 'Your stroke rate suggests inefficient pacing.',
+      detail: `${input.rate} spm is outside the typical 2k race-rate window of 28&ndash;36. High rates often signal rushed slides or weak length per stroke; low rates often signal not enough race-pace conditioning. Bring rate work into your steady state pieces.`
+    });
+  } else {
+    // Default: race execution
+    advice.push({
+      priority: 'Priority 2',
+      focus: 'Race execution will move your number more than fitness.',
+      detail: `Your inputs suggest your fitness and technique are aligned. The biggest remaining lever is race execution: pacing the first 500 to avoid flying-and-dying, holding rate through the third 500, and executing a structured sprint. Time trial practice with proper splits is the work.`
+    });
+  }
+
+  // Priority 3: weight class strategy if relevant
+  const sex = input.sex;
+  const cutoff = LW_CUTOFF[sex];
+  const isNearLWCutoff = input.weight > cutoff && input.weight <= cutoff + 6;
+  const isLW = input.weight <= cutoff;
+
+  if (isNearLWCutoff && input.age >= 16) {
+    advice.push({
+      priority: 'Priority 3',
+      focus: 'You\'re within striking distance of the lightweight class.',
+      detail: `At ${input.weight} kg, you're ${(input.weight - cutoff).toFixed(1)} kg over the lightweight cutoff (${cutoff} kg). Lightweight recruiting standards are slower than heavyweight, so dropping into LW could expand your options &mdash; but only if you can do it without losing power. This is a coach conversation, not a self-directed decision.`
+    });
+  } else if (isLW && input.age >= 16) {
+    advice.push({
+      priority: 'Priority 3',
+      focus: 'Lightweight programs are your path.',
+      detail: `At ${input.weight} kg you're under the ${cutoff} kg lightweight cutoff. Lightweight programs are fewer in number (especially women's), but the recruiting standards are slower than openweight, which can mean clearer recruiting math. Harvard, Cornell, Princeton, and Yale are the most competitive men's LW programs.`
+    });
+  } else if (input.age <= 17) {
+    advice.push({
+      priority: 'Priority 3',
+      focus: 'Recruiting timeline awareness.',
+      detail: `College coaches start tracking athletes seriously in sophomore and junior year of high school. If you're aiming at competitive programs, the work to upload tape, attend ID camps, and email coaches starts now &mdash; not after senior year. Have erg PRs, race results, and on-water video ready to share.`
+    });
+  }
+
+  return advice;
+}
+
+// ============================================================================
+// UI WIRING
+// ============================================================================
+const form = document.getElementById('predictor-form');
+const results = document.getElementById('results');
+const splitAlert = document.getElementById('split-alert');
+
+function deltaClass(v) {
+  if (v > 0.05) return 'positive';
+  if (v < -0.05) return 'negative';
+  return 'neutral';
+}
+function deltaText(v) {
+  const sign = v > 0 ? '+' : '';
+  return `${sign}${v.toFixed(1)}s`;
+}
+
+function renderResults(input, p) {
+  const benchmarks = BENCHMARKS[recruitingKey(input.sex, input.weight, input.weightclass)];
+  const isLW = recruitingKey(input.sex, input.weight, input.weightclass).endsWith('LW');
+  const narrative = buildRecruitingNarrative(p.erg2k, benchmarks, input.age, isLW);
+  const traj = buildTrajectoryContent(p.erg2k, input.age, input.experience, input.sex, benchmarks);
+  const advice = buildTrainingAdvice(input, p, benchmarks);
+
+  const benchRowsHtml = benchmarks.map(b => {
+    const gap = gapToBenchmark(p.erg2k, b.rangeHigh); // gap to slowest end of range = "in range"
+    const cls = classifyGap(gap, b);
+    return `
+      <div class="bench-row">
+        <div class="label">
+          <span class="name">${b.name}</span>
+          <span class="range">${formatRange(b.rangeLow, b.rangeHigh)} erg</span>
+          <span class="examples">${b.examples}</span>
+        </div>
+        <div class="gap ${cls}">${formatGap(gap)}</div>
+      </div>
+    `;
+  }).join('');
+
+  const adviceHtml = advice.map(a => `
+    <div class="advice-item">
+      <div class="priority">${a.priority}</div>
+      <div class="focus">${a.focus}</div>
+      <div class="detail">${a.detail}</div>
+    </div>
+  `).join('');
+
+  results.innerHTML = `
+    <div class="hero reveal">
+      <div class="hero-label">Predicted on-water 2,000m</div>
+      <div class="hero-time"><em>${formatSplit(p.predicted2k)}</em></div>
+      <div class="hero-meta">
+        <div class="hero-meta-item">
+          <span class="label">500m split</span>
+          <span class="value">${formatSplit(p.predicted500)}</span>
+        </div>
+        <div class="hero-meta-item">
+          <span class="label">Erg baseline</span>
+          <span class="value">${formatSplit(p.erg2k)}</span>
+        </div>
+        <div class="hero-meta-item" style="text-align:right">
+          <span class="label">Tier</span>
+          <span class="value tier">${p.tier}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card reveal">
+      <div class="card-title">Where You Stack &middot; Recruiting Standards</div>
+      <div class="card-narrative">${narrative}</div>
+      <div>${benchRowsHtml}</div>
+    </div>
+
+    <div class="card reveal">
+      <div class="card-title">Trajectory &middot; What Your Age Means</div>
+      <div class="card-narrative">${traj.narrative}</div>
+      <div class="traj-grid">
+        <div class="traj-cell">
+          <div class="traj-label">In 1 Year (age ${input.age + 1})</div>
+          <div class="traj-value"><em>${formatTimeShort(traj.oneYear)}</em> projected erg</div>
+          <div class="traj-detail">${traj.oneYearTierLabel}. Expected gain: ${pluralSec(traj.oneYearImprove)}.</div>
+        </div>
+        <div class="traj-cell">
+          <div class="traj-label">In 2 Years (age ${input.age + 2})</div>
+          <div class="traj-value"><em>${formatTimeShort(traj.twoYear)}</em> projected erg</div>
+          <div class="traj-detail">${traj.twoYearTierLabel}. Cumulative gain: ${pluralSec(traj.twoYearImprove)}.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card reveal">
+      <div class="card-title">What to Train &middot; Personalised Focus</div>
+      ${adviceHtml}
+    </div>
+
+    <div class="card reveal">
+      <div class="card-title">Adjustment Breakdown</div>
+      <div class="row"><div class="factor">Body weight <small>${input.weight} kg</small></div><div class="delta ${deltaClass(p.weight)}">${deltaText(p.weight)}</div></div>
+      <div class="row"><div class="factor">Height <small>${input.height} cm</small></div><div class="delta ${deltaClass(p.height)}">${deltaText(p.height)}</div></div>
+      <div class="row"><div class="factor">Stroke rate <small>${input.rate} spm</small></div><div class="delta ${deltaClass(p.rate)}">${deltaText(p.rate)}</div></div>
+      <div class="row"><div class="factor">Boat class <small>${input.boat}</small></div><div class="delta ${deltaClass(p.boat)}">${deltaText(p.boat)}</div></div>
+      <div class="row"><div class="factor">Experience <small>${input.experience}</small></div><div class="delta ${deltaClass(p.experience)}">${deltaText(p.experience)}</div></div>
+      <div class="row"><div class="factor">Water <small>${input.water}</small></div><div class="delta ${deltaClass(p.water)}">${deltaText(p.water)}</div></div>
+      <div class="row total"><div class="factor">Net adjustment vs erg</div><div class="delta">${deltaText(p.total)}</div></div>
+    </div>
+  `;
+}
+
+// Sex changes default body composition
+let lastSex = 'M';
+document.getElementById('sex').addEventListener('change', (e) => {
+  const newSex = e.target.value;
+  if (newSex === lastSex) return;
+  const heightEl = document.getElementById('height');
+  const weightEl = document.getElementById('weight');
+  const splitEl = document.getElementById('split');
+  if (lastSex === 'M' && newSex === 'F') {
+    if (parseFloat(heightEl.value) === 183) heightEl.value = 172;
+    if (parseFloat(weightEl.value) === 80)  weightEl.value = 65;
+    if (splitEl.value.trim() === '1:42.0')  splitEl.value = '1:54.0';
+  } else if (lastSex === 'F' && newSex === 'M') {
+    if (parseFloat(heightEl.value) === 172) heightEl.value = 183;
+    if (parseFloat(weightEl.value) === 65)  weightEl.value = 80;
+    if (splitEl.value.trim() === '1:54.0')  splitEl.value = '1:42.0';
+  }
+  lastSex = newSex;
+});
+
+form.addEventListener('submit', (e) => {
+  e.preventDefault();
+  splitAlert.classList.remove('show');
+  let splitSeconds;
+  try {
+    splitSeconds = parseSplit(document.getElementById('split').value);
+  } catch {
+    splitAlert.classList.add('show');
+    return;
+  }
+  const input = {
+    sex: document.getElementById('sex').value,
+    age: parseInt(document.getElementById('age').value, 10),
+    height: parseFloat(document.getElementById('height').value),
+    weight: parseFloat(document.getElementById('weight').value),
+    splitSeconds,
+    rate: parseInt(document.getElementById('rate').value, 10),
+    boat: document.getElementById('boat').value,
+    experience: document.getElementById('experience').value,
+    water: document.getElementById('water').value,
+    weightclass: document.getElementById('weightclass').value,
+  };
+  const p = predict(input);
+  renderResults(input, p);
+});
+
+form.dispatchEvent(new Event('submit'));
+</script>
+</body>
+</html>
